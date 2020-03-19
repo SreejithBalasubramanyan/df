@@ -8,6 +8,5 @@ pandas
 pretrainedmodels
 six
 torchvision
-tdqm
 opencv
 dlib
