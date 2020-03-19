@@ -7,5 +7,6 @@ numpy
 pandas
 pretrainedmodels
 six
-torchvision cpuonly 
+http://download.pytorch.org/whl/cpu/torch-0.4.1-cp36-cp36m-linux_x86_64.whl
+torchvision==0.2.1
 dlib
