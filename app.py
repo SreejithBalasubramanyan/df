@@ -47,6 +47,7 @@ def upload_file():
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			file.save(os.path.join('./static', filename))
+			import code
 			flash('File successfully uploaded')
 			return render_template('hello.html')
 		else:
