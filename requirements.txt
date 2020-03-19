@@ -7,5 +7,5 @@ numpy
 pandas
 pretrainedmodels
 six
-torchvision cpuonly -c pytorch
+torchvision cpuonly 
 dlib
