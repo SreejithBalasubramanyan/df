@@ -8,5 +8,5 @@ pandas
 pretrainedmodels
 six
 torchvision
-opencv
+opencv-contrib-python
 dlib
