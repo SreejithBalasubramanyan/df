@@ -7,5 +7,5 @@ numpy
 pandas
 pretrainedmodels
 six
-torch==1.3.1+cpu torchvision==0.4.2+cpu 
+torchvision==0.4.2+cpu 
 dlib
