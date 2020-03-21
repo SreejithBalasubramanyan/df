@@ -1,7 +1,7 @@
 import os
 import argparse
 from os.path import join
-import cv
+import cv2
 import dlib
 import torch
 import torch.nn as nn
