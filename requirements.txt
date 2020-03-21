@@ -12,7 +12,3 @@ torchvision==0.2.1
 dlib
 opencv-python
 opencv-contrib-python
-opencv-python --upgrade
-opencv-contrib-python --upgrade
-
-
