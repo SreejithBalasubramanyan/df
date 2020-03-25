@@ -49,6 +49,7 @@ def upload_file():
 			file.save(os.path.join('./static', filename))
 			import code
 			flash('File successfully uploaded')
+			predict_model("./static/%s" % (filename),model)
 			return render_template('hello.html')
 		else:
 			flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')

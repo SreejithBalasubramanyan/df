@@ -260,4 +260,4 @@ def predict_model(video_fn, model,
 model_path = './xception/full_raw.p'
 model = torch.load(model_path, map_location=torch.device('cpu'))
 
-predict_model('butter.mp4',model)
+#predict_model('butter.mp4',model)
