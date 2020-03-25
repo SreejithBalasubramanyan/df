@@ -238,14 +238,14 @@ def predict_model(video_fn, model,
     fn = video_fn.split('.')[0]
     #label = metadata.loc[video_fn]['label']
     #original = metadata.loc[video_fn]['original']
-    video_path = f'./static/butter.mp4'
+    video_path = "./static/%s" % (video_fn)
     output_path = './static'
     p=test_full_image_network(video_path, model, output_path, start_frame=0,cuda=False)
     # Read output
     fake_count=p[1]
     end_frame=p[0]
     #vidcap = cv2.VideoCapture(f'{fn}.avi')
-    vidcap = cv2.VideoCapture(f'{fn}.mp4')
+    vidcap = cv2.VideoCapture('%s.mp4' % (fn))
     success,image = vidcap.read()
     count = 0
     #path='./images'
