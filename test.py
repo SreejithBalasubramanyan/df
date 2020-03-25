@@ -1,3 +1,9 @@
+
+"""
+Evaluates a folder of video files or a single file with a xception binary"""
+
+from PIL import Image
+from torchvision import transforms
 import os
 import argparse
 from os.path import join
@@ -6,8 +12,10 @@ import dlib
 import torch
 import torch.nn as nn
 from PIL import Image as pil_image
-from tqdm import tqdm
-from torchvision import transforms
+from tqdm.notebook import tqdm
+
+# from network.models import model_selection
+# from dataset.transform import xception_default_data_transforms
 
 def get_boundingbox(face, width, height, scale=1.3, minsize=None):
     """
@@ -106,7 +114,7 @@ def test_full_image_network(video_path, model, output_path,
     p=[]
     reader = cv2.VideoCapture(video_path)
 
-    video_fn = video_path.split('/')[-1].split('.')[0]+'.avi'
+    video_fn = video_path.split('/')[-1].split('.')[0]+'.mp4'
     os.makedirs(output_path, exist_ok=True)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     fps = reader.get(cv2.CAP_PROP_FPS)
@@ -116,6 +124,16 @@ def test_full_image_network(video_path, model, output_path,
     # Face detector
     face_detector = dlib.get_frontal_face_detector()
 
+    # Load model
+#     model, *_ = model_selection(modelname='xception', num_out_classes=2)
+#     if model_path is not None:
+#         model = torch.load(model_path)
+#         print('Model found in {}'.format(model_path))
+#     else:
+#         print('No model found, initializing random model.')
+#     if cuda:
+#         model = model.cuda()
+
     # Text variables
     font_face = cv2.FONT_HERSHEY_SIMPLEX
     thickness = 2
@@ -124,13 +142,9 @@ def test_full_image_network(video_path, model, output_path,
     # Frame numbers and length of output video
     frame_num = 0
     assert start_frame < num_frames - 1
-    #The number of frames must be written here
-    end_frame= num_frames
+    #edit here for number of frames
+    end_frame= 100
     end_frame = end_frame if end_frame else num_frames
-     
-    #To remove frome here
-    #end_frame=300
-    #until here
     pbar = tqdm(total=end_frame-start_frame)
 
     while reader.isOpened():
@@ -208,7 +222,11 @@ def test_full_image_network(video_path, model, output_path,
     p.append(num_frames)
     p.append(fake_count)
     return p
-
+## transform.py
+"""
+Author: Andreas Rössler
+"""
+#from torchvision import transforms
 
 xception_default_data_transforms = {
     'train': transforms.Compose([
@@ -227,7 +245,9 @@ xception_default_data_transforms = {
         transforms.Normalize([0.5] * 3, [0.5] * 3)
     ]),
 }
-
+#metadata = pd.read_json('/content/gdrive/My Drive/deepfake-detection-challenge/train_sample_videos/metadata.json').T
+import os
+os.chdir('/home/sarathmsankaran96/project')
 def predict_model(video_fn, model,
                   start_frame=0,plot_every_x_frames = 1):
     """
@@ -238,26 +258,36 @@ def predict_model(video_fn, model,
     fn = video_fn.split('.')[0]
     #label = metadata.loc[video_fn]['label']
     #original = metadata.loc[video_fn]['original']
-
-    video_path = "./static/%s" % (video_fn)
-
-    output_path = './static'
+    video_path = ('/home/sarathmsankaran96/project/static/'+video_fn)
+    output_path = '/home/sarathmsankaran96/project/static'
     p=test_full_image_network(video_path, model, output_path, start_frame=0,cuda=False)
     # Read output
     fake_count=p[1]
     end_frame=p[0]
-    #vidcap = cv2.VideoCapture(f'{fn}.avi')
-
-    vidcap = cv2.VideoCapture('%s.mp4' % (fn))
-
+    vidcap = cv2.VideoCapture(fn+'.mp4')
     success,image = vidcap.read()
     count = 0
-    #path='./images'
-    os.chdir(path)
+    #fig, axes = plt.subplots(150, 2, figsize=(20,15))
+    #axes = axes = axes.flatten()
+   # path='/content/gdrive/My Drive/images'
+    #os.chdir(path)
     i = 0
+    #while success:
+        # Show every xth frame
+        #if count % plot_every_x_frames == 0:
+            #filen=str(count)+'.jpg'
+            #axes[i].imshow(image)
+            #cv2.imwrite(filen, image)
+            #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            #axes[i].set_title(f'{fn} - frame {count} - true label: {label}')
+            #axes[i].xaxis.set_visible(False)
+            #axes[i].yaxis.set_visible(False)
+            #i += 1
+        #success,image = vidcap.read()
+        #count += 1
+    #plt.tight_layout()
+    #plt.show()
     print(fake_count)
-
-model_path = './xception/full_raw.p'
+model_path = '/home/sarathmsankaran96/project/xception/full_raw.p'
 model = torch.load(model_path, map_location=torch.device('cpu'))
-
-predict_model('butter.mp4',model)
+predict_model('butter.mp4', model)
