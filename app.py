@@ -1,6 +1,7 @@
 import os
 #import magic
 import urllib3.request
+#import torch
 
 #from app import app
 from flask import Flask, flash, request, redirect, render_template
@@ -16,7 +17,8 @@ from werkzeug.utils import secure_filename
 
 
 
-
+#model_path = './xception/full_raw.p'
+#model = torch.load(model_path, map_location=torch.device('cpu'))
 
 
 
@@ -47,9 +49,9 @@ def upload_file():
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			file.save(os.path.join('./static', filename))
-			import code
+			from code import predict_model
 			flash('File successfully uploaded')
-			predict_model("./static/%s" % (filename),model)
+			predict_model("./static/%s" % (filename))
 			return render_template('hello.html')
 		else:
 			flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')

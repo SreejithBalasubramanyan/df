@@ -228,20 +228,22 @@ xception_default_data_transforms = {
     ]),
 }
 
-def predict_model(video_fn, model,
-                  start_frame=0,plot_every_x_frames = 1):
+def predict_model(video_fn,start_frame=0,plot_every_x_frames = 1):
     """
     Given a video and model, starting frame and end frame.
     Predict on all frames.
     
     """
+    model_path = './xception/full_raw.p'
+    model = torch.load(model_path, map_location=torch.device('cpu'))
     fn = video_fn.split('.')[0]
     #label = metadata.loc[video_fn]['label']
     #original = metadata.loc[video_fn]['original']
 
-    video_path = "./static/%s" % (video_fn)
+    video_path = "%s" % (video_fn)
 
     output_path = './static'
+    print(video_path)
     p=test_full_image_network(video_path, model, output_path, start_frame=0,cuda=False)
     # Read output
     fake_count=p[1]
@@ -253,11 +255,11 @@ def predict_model(video_fn, model,
     success,image = vidcap.read()
     count = 0
     #path='./images'
-    os.chdir(path)
+    #os.chdir(path)
     i = 0
     print(fake_count)
 
-model_path = './xception/full_raw.p'
-model = torch.load(model_path, map_location=torch.device('cpu'))
+#model_path = './xception/full_raw.p'
+#model = torch.load(model_path, map_location=torch.device('cpu'))
 
 #predict_model('butter.mp4',model)
