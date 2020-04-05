@@ -240,10 +240,10 @@ def predict_model(video_fn,start_frame=0,plot_every_x_frames = 1):
     #label = metadata.loc[video_fn]['label']
     #original = metadata.loc[video_fn]['original']
 
-    video_path = "%s" % (video_fn)
+    video_path = "./static/%s" % (video_fn)
 
     output_path = './static'
-    print(video_path)
+    print(fn)
     p=test_full_image_network(video_path, model, output_path, start_frame=0,cuda=False)
     # Read output
     fake_count=p[1]

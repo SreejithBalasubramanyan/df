@@ -51,13 +51,12 @@ def upload_file():
 			file.save(os.path.join('./static', filename))
 			from code import predict_model
 			flash('File successfully uploaded')
-			predict_model("./static/%s" % (filename))
-			return render_template('hello.html')
+			predict_model("%s" % (filename))
+			r=filename.split(".")
+			temp="static/"+r[0]+".avi"
+			return render_template('hello.html',fname=temp)
 		else:
 			flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
 			return redirect(request.url)
-
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=5000)		 
-
-# 	app.run(host='0.0.0.0', port=80)
+	app.run(host='0.0.0.0', port=5000)
