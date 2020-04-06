@@ -54,7 +54,8 @@ def upload_file():
 			predict_model("%s" % (filename))
 			r=filename.split(".")
 			temp="static/"+r[0]+".avi"
-			return render_template('hello.html',fname=temp)
+			temp2="static/"+r[0]+".png"
+			return render_template('hello.html',fname=temp,iname=temp2)
 		else:
 			flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
 			return redirect(request.url)

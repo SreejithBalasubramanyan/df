@@ -2,13 +2,15 @@ import os
 import argparse
 from os.path import join
 import cv2
+import pandas as pd
 import dlib
 import torch
 import torch.nn as nn
 from PIL import Image as pil_image
 from tqdm import tqdm
 from torchvision import transforms
-
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 def get_boundingbox(face, width, height, scale=1.3, minsize=None):
     """
     Expects a dlib face to generate a quadratic bounding box.
@@ -103,6 +105,7 @@ def test_full_image_network(video_path, model, output_path,
     #print('Starting: {}'.format(video_path))
 
     # Read and write
+    df = pd.DataFrame(columns = ["true","false"])
     p=[]
     reader = cv2.VideoCapture(video_path)
 
@@ -184,6 +187,7 @@ def test_full_image_network(video_path, model, output_path,
             color = (0, 255, 0) if prediction == 0 else (0, 0, 255)
             output_list = ['{0:.2f}'.format(float(x)) for x in
                            output.detach().cpu().numpy()[0]]
+            df.loc[frame_num] = [output_list[0],output_list[1]]
             cv2.putText(image, str(output_list)+'=>'+label, (x, y+h+30),
                         font_face, font_scale,
                         color, thickness, 2)
@@ -207,7 +211,7 @@ def test_full_image_network(video_path, model, output_path,
         #print('Input video file was empty')
     p.append(num_frames)
     p.append(fake_count)
-    return p
+    return p,df
 
 
 xception_default_data_transforms = {
@@ -244,7 +248,7 @@ def predict_model(video_fn,start_frame=0,plot_every_x_frames = 1):
 
     output_path = './static'
     print(fn)
-    p=test_full_image_network(video_path, model, output_path, start_frame=0,cuda=False)
+    p,df=test_full_image_network(video_path, model, output_path, start_frame=0,cuda=False)
     # Read output
     fake_count=p[1]
     end_frame=p[0]
@@ -258,7 +262,27 @@ def predict_model(video_fn,start_frame=0,plot_every_x_frames = 1):
     #os.chdir(path)
     i = 0
     print(fake_count)
+    data=df.astype(float)
+    plt.figure(figsize=(20,10))
+    plt.plot(data.index,data['true'],color='green')
+    plt.plot(data.index,data['false'],color='red')
+    plt.fill_between(data.index,data['true'],0,
+                 facecolor='green', #The fill color
+                 color='green', #The outline color
+                 alpha=0.2)
 
+    plt.fill_between(data.index,data['false'],0,
+                 facecolor='red', #The fill color
+                 color='red', #The outline color
+                 alpha=0.2)
+    o_patch=mpatches.Patch(color='red',facecolor="red",alpha=0.2,label='fake)')
+    g_patch=mpatches.Patch(color='green',facecolor="green",alpha=0.2,label='real') 
+    plt.legend(handles=[o_patch,g_patch])
+    plt.xlabel("# of frames")
+    plt.ylabel("probability")
+    plt.title("Deepfake detection")
+    plt.savefig('./static/%s.png'%(fn))
+    return 0
 #model_path = './xception/full_raw.p'
 #model = torch.load(model_path, map_location=torch.device('cpu'))
 
