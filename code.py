@@ -193,6 +193,8 @@ def test_full_image_network(video_path, model, output_path,
                         color, thickness, 2)
             # draw box over face
             cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+        else:
+            df.loc[frame_num]=[0,0]
 
         if frame_num >= end_frame:
             break
@@ -262,6 +264,7 @@ def predict_model(video_fn,start_frame=0,plot_every_x_frames = 1):
     #os.chdir(path)
     i = 0
     print(fake_count)
+    df.to_csv('./static/%s.csv'%(fn))
     data=df.astype(float)
     plt.figure(figsize=(20,10))
     plt.plot(data.index,data['true'],color='green')
