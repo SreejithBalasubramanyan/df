@@ -109,7 +109,7 @@ def test_full_image_network(video_path, model, output_path,
     p=[]
     reader = cv2.VideoCapture(video_path)
 
-    video_fn = video_path.split('/')[-1].split('.')[0]+'1.mp4'
+    video_fn = video_path.split('/')[-1].split('.')[0]+'1.avi'
     os.makedirs(output_path, exist_ok=True)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     fps = reader.get(cv2.CAP_PROP_FPS)

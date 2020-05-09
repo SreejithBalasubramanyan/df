@@ -1,7 +1,7 @@
 import os
 #import magic
 import urllib3.request
-
+import pandas as pd
 #from app import app
 from flask import Flask, flash, request, redirect, render_template
 UPLOAD_FOLDER = './'
@@ -52,12 +52,17 @@ def upload_file():
                 flash('File successfully uploaded')
                 predict_model("%s" % (filename))
                 r=filename.split(".")
-                temp="static/"+r[0]+"1.mp4"
-                temp2="static/"+r[0]+".png"
-                return render_template('hello.html',fname=temp,iname=temp2)
+                #temp="static/"+r[0]+"1.mp4"
+                t="static/"+r[0]+"1.avi"
+                df=pd.read_csv('static/%s.csv' %(r[0]),index_col = 0)
+                temp2="static/"+r[0]+"1.ogg"
+                temp3="static/"+r[0]+".png"
+                #df=pd.read_csv('static/ %s.csv' %(r[0]),index_col = 0)
+                return render_template('hello.html',tables=[df.to_html(classes='data')], titles=df.columns.values,fname=t,oname=temp2,iname=temp3)
             else:
                 flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
                 return redirect(request.url)
+
         elif 'youtube_link' in request.form:
             youtube_url = request.form['youtube_link']
             from pytube import YouTube
@@ -71,10 +76,12 @@ def upload_file():
             flash('File successfully uploaded')
             filename=r+".mp4"
             predict_model("%s" % (filename))
-            temp="static/"+r+"1.mp4"
-            temp2="static/"+r+".png"
-            return render_template('hello.html',fname=temp,iname=temp2)
+            temp="/static/"+r+"1.avi"
+            temp2="/static/"+r+"1.ogg"
+            temp3="static/"+r+".png"
+            df=pd.read_csv('static/%s.csv' %(r),index_col = 0)
+            return render_template('hello.html',tables=[df.to_html(classes='data')], titles=df.columns.values,fname=temp,oname=temp2,iname=temp3)
             #file.title
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=5000)
+   app.run(host='0.0.0.0', port=5000) 
