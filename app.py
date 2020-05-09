@@ -81,11 +81,17 @@ def upload_file():
             flash('File successfully uploaded')
             filename=r+".mp4"
             predict_model("%s" % (filename))
-            temp="/static/"+r+"1.avi"
-            temp2="/static/"+r+"1.ogg"
+            temp="static/"+r+"1.avi"
+            temp4="static/"+r+"1.mp4"
+            import ffmpy
+            ff = ffmpy.FFmpeg(
+            inputs={'%s'%(temp): None},
+            outputs={'%s'%(temp4): None})
+            ff.run()
+            temp2="static/"+r+"1.ogg"
             temp3="static/"+r+".png"
             df=pd.read_csv('static/%s.csv' %(r),index_col = 0)
-            return render_template('hello.html',tables=[df.to_html(classes='data')], titles=df.columns.values,fname=temp,oname=temp2,iname=temp3)
+            return render_template('hello.html',tables=[df.to_html(classes='data')],titles=df.columns.values,fname=temp4,oname=temp2,iname=temp3)
             #file.title
 
 if __name__ == "__main__":
