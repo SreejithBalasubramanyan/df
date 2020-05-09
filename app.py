@@ -52,7 +52,7 @@ def upload_file():
                 flash('File successfully uploaded')
                 predict_model("%s" % (filename))
                 r=filename.split(".")
-                temp="static/"+r[0]+".avi"
+                temp="static/"+r[0]+"1.mp4"
                 temp2="static/"+r[0]+".png"
                 return render_template('hello.html',fname=temp,iname=temp2)
             else:
@@ -71,7 +71,7 @@ def upload_file():
             flash('File successfully uploaded')
             filename=r+".mp4"
             predict_model("%s" % (filename))
-            temp="static/"+r+".avi"
+            temp="static/"+r+"1.mp4"
             temp2="static/"+r+".png"
             return render_template('hello.html',fname=temp,iname=temp2)
             #file.title
