@@ -3,7 +3,7 @@ import os
 import urllib3.request
 import pandas as pd
 #from app import app
-from flask import Flask, flash, request, redirect, render_template
+from flask import Flask, flash, request, redirect, render_template,url_for
 UPLOAD_FOLDER = './'
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-
+error=" "
 from werkzeug.utils import secure_filename
 
 
@@ -47,11 +47,14 @@ def upload_file():
                 return redirect(request.url)
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
+                r=filename.split(".")
+                if(r[1]!="mp4"):
+                    error="File extension not supported,please upload mp4 files"
+                    return render_template("upload.html", error=error)
                 file.save(os.path.join('./static', filename))
                 from code import predict_model
                 flash('File successfully uploaded')
                 predict_model("%s" % (filename))
-                r=filename.split(".")
                 temp="static/"+r[0]+"1.mp4"
                 t="static/"+r[0]+"1.avi"
                 import ffmpy
@@ -72,27 +75,38 @@ def upload_file():
             youtube_url = request.form['youtube_link']
             from pytube import YouTube
             from pytube import extract
-            yt = YouTube(youtube_url)
-            file=yt.streams.filter(progressive=True,mime_type="video/mp4").first()
-            filename2=(file.title).split(" ")
-            r=filename2[0]
-            file.download("./static",r)
-            from code import predict_model
-            flash('File successfully uploaded')
-            filename=r+".mp4"
-            predict_model("%s" % (filename))
-            temp="static/"+r+"1.avi"
-            temp4="static/"+r+"1.mp4"
-            import ffmpy
-            ff = ffmpy.FFmpeg(
-            inputs={'%s'%(temp): None},
-            outputs={'%s'%(temp4): None})
-            ff.run()
-            temp2="static/"+r+"1.ogg"
-            temp3="static/"+r+".png"
-            df=pd.read_csv('static/%s.csv' %(r),index_col = 0)
-            return render_template('hello.html',tables=[df.to_html(classes='data')],titles=df.columns.values,fname=temp4,oname=temp2,iname=temp3)
-            #file.title
+            import sys
+            error=""
+            try:
+                yt = YouTube(youtube_url)
+                file=yt.streams.filter(progressive=True,mime_type="video/mp4").first()
+                filename2=(file.title).split(" ")
+                r=filename2[0]
+                file.download("./static",r)
+            except:
+                #yt.streams.filter(progressive=True).all()
+                error=str(sys.exc_info()[0])
+            if(len(error)==0):
+                from code import predict_model
+                flash('File successfully uploaded')
+                filename=r+".mp4"
+                predict_model("%s" % (filename))
+                temp="static/"+r+"1.avi"
+                temp4="static/"+r+"1.mp4"
+                import ffmpy
+                ff = ffmpy.FFmpeg(
+                inputs={'%s'%(temp): None},
+                outputs={'%s'%(temp4): None})
+                ff.run()
+                temp2="static/"+r+"1.ogg"
+                temp3="static/"+r+".png"
+                df=pd.read_csv('static/%s.csv' %(r),index_col = 0)
+                return render_template('hello.html',tables=[df.to_html(classes='data')],titles=df.columns.values,fname=temp4,oname=temp2,iname=temp3)
+                #file.title
+            else:
+                error="Incorrect Youtube URL"
+                return render_template("upload.html", error=error)
+
 
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=5000) 
