@@ -51,6 +51,9 @@ def upload_file():
                 if(r[1]!="mp4"):
                     error="File extension not supported,please upload mp4 files"
                     return render_template("upload.html", error=error)
+                from random import randint
+                r[0]= r[0]+str(randint(100,999))
+                filename=r[0]+".mp4"
                 file.save(os.path.join('./static', filename))
                 from code import predict_model
                 flash('File successfully uploaded')
@@ -65,6 +68,8 @@ def upload_file():
                 df=pd.read_csv('static/%s.csv' %(r[0]),index_col = 0)
                 temp2="static/"+r[0]+"1.ogg"
                 temp3="static/"+r[0]+".png"
+                os.remove("static/"+r[0]+"1.avi")
+                os.remove("static/"+r[0]+".mp4")
                 #df=pd.read_csv('static/ %s.csv' %(r[0]),index_col = 0)
                 return render_template('hello.html',tables=[df.to_html(classes='data')], titles=df.columns.values,fname=temp,oname=temp2,iname=temp3)
             else:
@@ -81,7 +86,8 @@ def upload_file():
                 yt = YouTube(youtube_url)
                 file=yt.streams.filter(progressive=True,mime_type="video/mp4").first()
                 filename2=(file.title).split(" ")
-                r=filename2[0]
+                from random import randint
+                r=filename2[0]+str(randint(100,999))
                 file.download("./static",r)
             except:
                 #yt.streams.filter(progressive=True).all()
@@ -100,6 +106,8 @@ def upload_file():
                 ff.run()
                 temp2="static/"+r+"1.ogg"
                 temp3="static/"+r+".png"
+                os.remove("static/"+r+"1.avi")
+                os.remove("static/"+r+".mp4")
                 df=pd.read_csv('static/%s.csv' %(r),index_col = 0)
                 return render_template('hello.html',tables=[df.to_html(classes='data')],titles=df.columns.values,fname=temp4,oname=temp2,iname=temp3)
                 #file.title

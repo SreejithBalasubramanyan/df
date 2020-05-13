@@ -2256,7 +2256,7 @@ ul {
 
 /* line 69, ../../01 cl html template/03_jun 2019/186_Gaiming_html/sass/_menu.scss */
 .main_menu .dropdown-toggle:hover .nav-item .dropdown {
-  color: #ff0000 !important;
+  color: #ffe066 !important;
 }
 
 /* line 75, ../../01 cl html template/03_jun 2019/186_Gaiming_html/sass/_menu.scss */
@@ -2272,7 +2272,7 @@ ul {
   max-width: 1140px;
   z-index: 999;
   text-align: center;
-  background: #ff0000;
+  background:#ffe066;
 }
 
 /* line 89, ../../01 cl html template/03_jun 2019/186_Gaiming_html/sass/_menu.scss */
@@ -2373,11 +2373,10 @@ ul {
   width: 100%;
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.05);
   top: 0;
-  background-color: #212529;
+  background-color:hsla(240, 4%, 5%, 0.979)0, 4%, 5%, 0.979), 4%, 5%);
 }
 
-
-
+/* l
 /* line 185, ../../01 cl html template/03_jun 2019/186_Gaiming_html/sass/_menu.scss */
 .dropdown .dropdown-menu {
   transition: all 0.5s;
@@ -2406,7 +2405,7 @@ ul {
 @media (max-width: 991px) {
   /* line 214, ../../01 cl html template/03_jun 2019/186_Gaiming_html/sass/_menu.scss */
   .main_menu {
-    padding: 26px 0px;
+    padding: 16px 0px;
   }
   /* line 218, ../../01 cl html template/03_jun 2019/186_Gaiming_html/sass/_menu.scss */
   .home_menu .main-menu-item {
