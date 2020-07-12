@@ -126,15 +126,15 @@ def test_full_image_network(video_path, model, output_path,
     fake_count=0
     # Frame numbers and length of output video
     frame_num = 0
-    assert start_frame < num_frames - 1
+    #assert start_frame < num_frames - 1
     #The number of frames must be written here
     end_frame= num_frames
-    end_frame = end_frame if end_frame else num_frames
+    #end_frame = end_frame if end_frame else num_frames
      
     #To remove frome here
     #end_frame=300
     #until here
-    pbar = tqdm(total=end_frame-start_frame)
+    pbar = tqdm(total=num_frames)
 
     while reader.isOpened():
         _, image = reader.read()
@@ -196,7 +196,7 @@ def test_full_image_network(video_path, model, output_path,
         else:
             df.loc[frame_num]=[0,0]
 
-        if frame_num >= end_frame:
+        if frame_num >end_frame:
             break
 
         # Show

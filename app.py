@@ -21,7 +21,7 @@ from werkzeug.utils import secure_filename
 
 
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','mp4','avi'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg','mp4','avi'])
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -48,13 +48,28 @@ def upload_file():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 r=filename.split(".")
-                if(r[1]!="mp4"):
-                    error="File extension not supported,please upload mp4 files"
+                fllag=0
+                for ext in ALLOWED_EXTENSIONS:
+                  if(r[1]==ext):
+                    fllag=1
+                    break
+                if(fllag==0):
+                    error="File extension not supported,please upload vidoe or image files"
                     return render_template("upload.html", error=error)
                 from random import randint
                 r[0]= r[0]+str(randint(100,999))
-                filename=r[0]+".mp4"
+                filename=r[0]+"."+r[1]
                 file.save(os.path.join('./static', filename))
+                if(r[1]!='mp4'):
+                  ip_file="static/"+r[0]+"."+r[1]
+                  op_file="static/"+r[0]+"."+"mp4"
+                  import ffmpy
+                  ff = ffmpy.FFmpeg(
+                  inputs={'%s'%(ip_file): None},
+                  outputs={'%s'%(op_file): None})
+                  ff.run()
+                  os.remove(ip_file)
+                  filename=r[0]+"."+"mp4"
                 from code import predict_model
                 flash('File successfully uploaded')
                 predict_model("%s" % (filename))
