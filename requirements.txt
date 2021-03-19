@@ -1,7 +1,7 @@
 flask
 gunicorn
 urllib3
-pillow==6.0.0
+pillow==8.1.1
 munch
 numpy
 pandas
